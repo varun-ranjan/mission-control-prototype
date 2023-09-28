@@ -8,12 +8,11 @@ app.use(express.json());
 
 var currentSpeed = 0;
 
-app.get("/", (req, res) => {
-  res.json({ message: "Hello World" });
-  res.send(currentSpeed);
+app.get("/speed", (req, res) => {
+  res.json(`speed is now set to ${currentSpeed}`);
 });
 
-app.post("/", (req, res) => {
+app.post("/speed", (req, res) => {
   const { speed } = req.body;
   console.log(speed);
   currentSpeed = speed;

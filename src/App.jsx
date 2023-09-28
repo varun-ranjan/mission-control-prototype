@@ -5,7 +5,7 @@ export default function App() {
   const [speed, setSpeed] = useState("");
   function handleSubmit(e) {
     e.preventDefault();
-    fetch("http://localhost:3000/", {
+    fetch("http://localhost:3000/speed", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ speed }),
