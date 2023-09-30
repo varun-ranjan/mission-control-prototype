@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./index.css";
 
 export default function App() {
   const [speed, setSpeed] = useState("");
+  const [status, setStatus] = useState("");
+
   function handleSubmit(e) {
     e.preventDefault();
     fetch("http://localhost:3000/speed", {
@@ -11,6 +13,15 @@ export default function App() {
       body: JSON.stringify({ speed }),
     });
   }
+
+  useEffect(() => {
+    fetch("http://localhost:3000/connected", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((data) => setStatus(data));
+  });
 
   return (
     <>
@@ -26,6 +37,7 @@ export default function App() {
         </div>
         <button className="btn">Confirm</button>
       </form>
+      <h2>Rover is {status ? "Connected" : "Disconnected"}</h2>
     </>
   );
 }
