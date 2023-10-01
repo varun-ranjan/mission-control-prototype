@@ -3,8 +3,8 @@ import "./index.css";
 
 export default function App() {
   const [speed, setSpeed] = useState("");
-  const [status, setStatus] = useState("");
   const [direction, setDirection] = useState("");
+  const [status, setStatus] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -17,24 +17,37 @@ export default function App() {
 
   function handleKeyDown(e) {
     var key = e.key;
-    var direction;
-    if (key == "w") direction = "forward";
-    else if (key == "a") direction = "left";
-    else if (key == "s") direction = "backward";
-    else if (key == "d") direction = "right";
+    var lastKey;
+    if (key != lastKey) {
+      if (key == "w") setDirection("forward");
+      else if (key == "a") setDirection("left");
+      else if (key == "s") setDirection("backward");
+      else if (key == "d") setDirection("right");
 
-    if (direction != undefined) {
-      fetch("http://localhost:3000/direction", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ direction }),
-      });
+      var elements = document.querySelectorAll("div");
+      for (const el of elements) {
+        el.classList.remove("highlight");
+      }
+
+      var nElement = document.getElementById(key);
+      nElement.classList.add("highlight");
+      lastKey = key;
     }
   }
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown, true);
-  }, []);
+    document.addEventListener("keydown", handleKeyDown);
+
+    fetch("http://localhost:3000/direction", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ direction }),
+    });
+
+    return function cleanup() {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  });
 
   useEffect(() => {
     fetch("http://localhost:3000/connected", {
@@ -59,6 +72,21 @@ export default function App() {
         </div>
         <button className="btn">Confirm</button>
       </form>
+
+      <h2>Use WASD for up, left, down, and right (respectively)</h2>
+      <div class="topSquare" id="w">
+        W
+      </div>
+      <div class="botSquare" id="a">
+        A
+      </div>
+      <div class="botSquare" id="s">
+        S
+      </div>
+      <div class="botSquare" id="d">
+        D
+      </div>
+
       <h2>Rover is {status ? "Connected" : "Disconnected"}</h2>
     </>
   );
