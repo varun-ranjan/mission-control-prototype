@@ -4,6 +4,7 @@ import "./index.css";
 export default function App() {
   const [speed, setSpeed] = useState("");
   const [status, setStatus] = useState("");
+  const [direction, setDirection] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -13,6 +14,27 @@ export default function App() {
       body: JSON.stringify({ speed }),
     });
   }
+
+  function handleKeyDown(e) {
+    var key = e.key;
+    var direction;
+    if (key == "w") direction = "forward";
+    else if (key == "a") direction = "left";
+    else if (key == "s") direction = "backward";
+    else if (key == "d") direction = "right";
+
+    if (direction != undefined) {
+      fetch("http://localhost:3000/direction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ direction }),
+      });
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown, true);
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:3000/connected", {

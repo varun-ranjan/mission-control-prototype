@@ -6,18 +6,29 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-var currentSpeed = 0;
+var currSpeed;
+var currDirection;
 var isConnected;
 var last;
 
 app.get("/speed", (req, res) => {
-  res.json(`speed is now set to ${currentSpeed}`);
+  res.json(`speed is now set to ${currSpeed}`);
 });
 
 app.post("/speed", (req, res) => {
   const { speed } = req.body;
-  currentSpeed = speed;
+  currSpeed = speed;
   res.send("Speed set successfully");
+});
+
+app.get("/direction", (req, res) => {
+  res.json(`rover is now moving ${currDirection}`);
+});
+
+app.post("/direction", (req, res) => {
+  const { direction } = req.body;
+  currDirection = direction;
+  res.send("Direction set successfully");
 });
 
 app.get("/connected", (req, res) => {

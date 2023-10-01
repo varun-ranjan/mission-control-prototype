@@ -1,17 +1,27 @@
 import requests
 import time
 
-last = None
+lastSpeed = None
+lastDirection = None
 
 while True:
-    res = requests.get("http://localhost:3000/speed")
-    x = requests.post(
+    resSpeed = requests.get("http://localhost:3000/speed")
+    resDirection = requests.get("http://localhost:3000/direction")
+    requests.post(
         "http://localhost:3000/connected",
         json={"connected": True})
-    if res.status_code == requests.codes.not_found:
+
+    if (resSpeed.status_code == requests.codes.not_found or
+            resDirection.status_code == requests.codes.not_found):
         print("not found")
         break
-    if res.json() != last:
-        print(res.json())
-        last = res.json()
+
+    if resSpeed.json() != lastSpeed:
+        print(resSpeed.json())
+        lastSpeed = resSpeed.json()
+
+    if resDirection.json() != lastDirection:
+        print(resDirection.json())
+        lastDirection = resDirection.json()
+
     time.sleep(0.5)
